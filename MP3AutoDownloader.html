@@ -1,0 +1,75 @@
+
+<iframe id="my_iframe" style="display:none;"></iframe>
+<script>
+ // Download.js: https://github.com/PixelsCommander/Download-File-JS
+document.write("Recommend running with high speed internet or adjust the interval");
+document.write("Starting...");
+window.downloadFile = function (sUrl) {
+    //iOS devices do not support downloading. We have to inform user about this.
+    if (/(iP)/g.test(navigator.userAgent)) {
+        alert('Your device does not support files downloading. Please try again in desktop browser.');
+        return false;
+    }
+    //If in Chrome or Safari - download via virtual link click
+    if (window.downloadFile.isChrome || window.downloadFile.isSafari) {
+        //Creating new link node.
+        var link = document.createElement('a');
+        link.href = sUrl;
+
+        if (link.download !== undefined) {
+            //Set HTML5 download attribute. This will prevent file from opening if supported.
+            var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
+            link.download = fileName;
+        }
+
+        //Dispatching click event.
+        if (document.createEvent) {
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            link.dispatchEvent(e);
+            return true;
+        }
+    }
+    // Force file download (whether supported by server).
+    if (sUrl.indexOf('?') === -1) {
+        sUrl += '?download';
+    }
+    window.open(sUrl, '_self');
+    return true;
+}
+
+window.downloadFile.isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1;
+
+function Download(url) {
+    document.getElementById('my_iframe').src = url;
+};
+
+var i = 100; //major iterature
+
+function urlNamer (){
+	if (i <= 1 || i < 10 ){ //less than 10
+		 var dllink = "https://dhammaway.files.wordpress.com/2013/03/"+"00"+i+".mp3"
+	}else if (i > 9 && i < 100 ){ //less than 100
+		 var dllink = "https://dhammaway.files.wordpress.com/2013/03/"+"0"+i+".mp3"
+	}else if (i > 99){ //above hundred
+		 var dllink = "https://dhammaway.files.wordpress.com/2013/03/"+i+".mp3"
+	}
+	return dllink
+}
+
+function myLoop () {  
+
+   setTimeout(function () {  
+
+      document.write(urlNamer());
+      document.write("<br>");         
+      downloadFile(urlNamer());
+      i++;                     
+      if (i < 114) {           
+         myLoop();             
+      }                       
+   }, 1500) // set interval here
+}
+myLoop();
+</script>
